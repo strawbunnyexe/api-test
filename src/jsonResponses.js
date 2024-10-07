@@ -1,4 +1,7 @@
-const users = {};
+const fs = require('fs');
+const query = require('querystring');
+
+const pokedex = fs.readFileSync(`${__dirname}/../data/pokedex.json`);
 
 const respondJSON = (request, response, status, object) => {
   const content = JSON.stringify(object);
@@ -16,17 +19,17 @@ const respondJSON = (request, response, status, object) => {
 };
 
 // add a user from a POST body
-const addUser = (request, response) => {
+const addPokemon = (request, response) => {
   // default json message
   const responseJSON = {
-    message: 'Name and age are both required.',
+    message: 'Name is required.',
   };
 
   // get name and age from request body
-  const { name, age } = request.body;
+  const name = request.body;
 
   // error message if name or age are missing
-  if (!name || !age) {
+  if (!name) {
     responseJSON.id = 'addUserMissingParams';
     return respondJSON(request, response, 400, responseJSON);
   }
@@ -34,17 +37,14 @@ const addUser = (request, response) => {
   // default status code
   let responseCode = 204;
 
-  // create empty user if user doesn't exist yet
-  if (!users[name]) {
+  // create empty pokemon if user doesn't exist yet
+  if (!pokedex[name]) {
     // change status code to 201 (created)
     responseCode = 201;
-    users[name] = {
+    pokedex[name] = {
       name,
     };
   }
-
-  // add or update fields for the user
-  users[name].age = age;
 
   // set created message if response is created
   if (responseCode === 201) {
@@ -56,10 +56,57 @@ const addUser = (request, response) => {
   return respondJSON(request, response, responseCode, {});
 };
 
-// return user object as JSON
-const getUsers = (request, response) => {
+const ratePokemon = (request, response) => {
+  // default json message
   const responseJSON = {
-    users,
+    message: 'Name and rating are required.',
+  };
+
+  return respondJSON(request, response, 204, responseJSON);
+};
+
+// return user object as JSON
+const getPokemon = (request, response) => {
+  const responseJSON = {
+    pokedex,
+  };
+
+  respondJSON(request, response, 200, responseJSON);
+};
+
+const getPokemonType = (request, response) => {
+  const pokemons = [];
+
+  const parameters = query.parse(request.url);
+  // console.log(parameters['/getPokemonType?type']);
+
+  pokedex.forEach((pokemon) => {
+    if (pokemon.type === parameters['/getPokemonType?type']) {
+      pokemons.push(pokemon);
+    }
+  });
+
+  console.log(pokemons);
+
+  const responseJSON = {
+    pokemons,
+  };
+
+  respondJSON(request, response, 200, responseJSON);
+};
+
+const getPokemonEvolution = (request, response) => {
+  const responseJSON = {
+    pokedex,
+  };
+
+  respondJSON(request, response, 200, responseJSON);
+};
+
+// get all pokemon in JSON file
+const getAllPokemon = (request, response) => {
+  const responseJSON = {
+    pokedex,
   };
 
   respondJSON(request, response, 200, responseJSON);
@@ -76,7 +123,11 @@ const notFound = (request, response) => {
 };
 
 module.exports = {
-  getUsers,
-  addUser,
+  getPokemon,
+  getPokemonType,
+  getPokemonEvolution,
+  getAllPokemon,
+  addPokemon,
+  ratePokemon,
   notFound,
 };

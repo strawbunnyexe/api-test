@@ -33,8 +33,10 @@ const parseBody = (request, response, handler) => {
 
 // handle POST requests
 const handlePost = (request, response, parsedUrl) => {
-  if (parsedUrl.pathname === '/addUser') { // add user
-    parseBody(request, response, jsonHandler.addUser);
+  if (parsedUrl.pathname === '/addPokemon') { // add pokemon
+    parseBody(request, response, jsonHandler.addPokemon);
+  } else if (parsedUrl.pathname === '/ratePokemon') { // rate pokemon
+    parseBody(request, response, jsonHandler.ratePokemon);
   }
 };
 
@@ -44,8 +46,14 @@ const handleGet = (request, response, parsedUrl) => {
     htmlHandler.getIndex(request, response);
   } else if (parsedUrl.pathname === '/style.css') { // style css
     htmlHandler.getCSS(request, response);
-  } else if (parsedUrl.pathname === '/getUsers') { // get users page
-    jsonHandler.getUsers(request, response);
+  } else if (parsedUrl.pathname === '/getPokemon') { // get pokemon
+    jsonHandler.getPokemon(request, response);
+  } else if (parsedUrl.pathname === '/getPokemonType') { // get pokemon type
+    jsonHandler.getPokemonType(request, response);
+  } else if (parsedUrl.pathname === '/getPokemonEvolution') { // get pokemon evolution
+    jsonHandler.getPokemonEvolution(request, response);
+  } else if (parsedUrl.pathname === '/getAllPokemon') { // get all pokemon
+    jsonHandler.getAllPokemon(request, response);
   } else { // not found page
     jsonHandler.notFound(request, response);
   }
