@@ -99,8 +99,6 @@ const getPokemonType = (request, response) => {
     }
   });
 
-  console.log(pokemons);
-
   const responseJSON = {
     pokemons,
   };
@@ -109,8 +107,9 @@ const getPokemonType = (request, response) => {
 };
 
 const getPokemonEvolution = (request, response) => {
+  const pokemons = JSON.parse(pokedex);
   const responseJSON = {
-    pokedex,
+    pokemons,
   };
 
   respondJSON(request, response, 200, responseJSON);
@@ -118,9 +117,9 @@ const getPokemonEvolution = (request, response) => {
 
 // get all pokemon in JSON file
 const getAllPokemon = (request, response) => {
-  const pokedexJson = JSON.parse(pokedex);
+  const pokemons = JSON.parse(pokedex);
   const responseJSON = {
-    pokedexJson,
+    pokemons,
   };
 
   respondJSON(request, response, 200, responseJSON);
