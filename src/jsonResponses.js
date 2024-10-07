@@ -65,10 +65,23 @@ const ratePokemon = (request, response) => {
   return respondJSON(request, response, 204, responseJSON);
 };
 
-// return user object as JSON
+// return pokemon based on name
 const getPokemon = (request, response) => {
+  const pokemons = [];
+
+  const pokedexJson = JSON.parse(pokedex);
+
+  const parameters = query.parse(request.url);
+
+  // find pokemon that matches name
+  pokedexJson.forEach((pokemon) => {
+    if (pokemon.name === parameters['/getPokemon?name']) {
+      pokemons.push(pokemon);
+    }
+  });
+
   const responseJSON = {
-    pokedex,
+    pokemons,
   };
 
   respondJSON(request, response, 200, responseJSON);
@@ -76,12 +89,12 @@ const getPokemon = (request, response) => {
 
 const getPokemonType = (request, response) => {
   const pokemons = [];
+  const pokedexJson = JSON.parse(pokedex);
 
   const parameters = query.parse(request.url);
-  // console.log(parameters['/getPokemonType?type']);
 
-  pokedex.forEach((pokemon) => {
-    if (pokemon.type === parameters['/getPokemonType?type']) {
+  pokedexJson.forEach((pokemon) => {
+    if (pokemon.type.includes(parameters['/getPokemonType?type'])) {
       pokemons.push(pokemon);
     }
   });
@@ -105,8 +118,9 @@ const getPokemonEvolution = (request, response) => {
 
 // get all pokemon in JSON file
 const getAllPokemon = (request, response) => {
+  const pokedexJson = JSON.parse(pokedex);
   const responseJSON = {
-    pokedex,
+    pokedexJson,
   };
 
   respondJSON(request, response, 200, responseJSON);
