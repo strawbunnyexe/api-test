@@ -25,7 +25,7 @@ const addPokemon = (request, response) => {
     message: 'Name is required.',
   };
 
-  // get name and age from request body
+  // get name from request body
   const name = request.body;
 
   // error message if name or age are missing
@@ -61,8 +61,35 @@ const ratePokemon = (request, response) => {
   const responseJSON = {
     message: 'Name and rating are required.',
   };
+  // get name from request body
+  const name = request.body;
 
-  return respondJSON(request, response, 204, responseJSON);
+  // error message if name or age are missing
+  if (!name) {
+    responseJSON.id = 'addUserMissingParams';
+    return respondJSON(request, response, 400, responseJSON);
+  }
+
+  // default status code
+  let responseCode = 204;
+
+  // create empty pokemon if user doesn't exist yet
+  if (!pokedex[name]) {
+    // change status code to 201 (created)
+    responseCode = 201;
+    pokedex[name] = {
+      name,
+    };
+  }
+
+  // set created message if response is created
+  if (responseCode === 201) {
+    responseJSON.message = 'Created Successfully';
+    return respondJSON(request, response, responseCode, responseJSON);
+  }
+
+  // send no response (empty message) if status code is 204
+  return respondJSON(request, response, responseCode, {});
 };
 
 // return pokemon based on name
@@ -107,7 +134,17 @@ const getPokemonType = (request, response) => {
 };
 
 const getPokemonEvolution = (request, response) => {
-  const pokemons = JSON.parse(pokedex);
+  const pokemons = [];
+  const pokedexJson = JSON.parse(pokedex);
+
+  const parameters = query.parse(request.url);
+
+  pokedexJson.forEach((pokemon) => {
+    if (pokemon.name === (parameters['/getPokemonEvolution?name'])) {
+      pokemons.push(pokemon.next_evolution);
+    }
+  });
+
   const responseJSON = {
     pokemons,
   };
