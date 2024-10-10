@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokemon API Test Docs</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<body>
+  <section id="top">
+    <h1>Pokemon API Test</h1>
+    <!--Get Pokemon-->
+    <h2>Get Pokemon</h2>
+    <form id="pokemonForm" action="/getPokemon" method="get">
+      <label for="name">Name: </label>
+      <input id="nameField" type="text" name="name" />
+      <label for="pokemonId">ID: </label>
+      <input id="pokemonId" type="number" name="pokemonId" min="1" max="151" step="1" />
+      <select id="methodSelect">
+        <option value="get">GET</option>
+        <option value="head">HEAD</option>
+      </select>
+      <input type="submit" value="Get Pokemon" />
+    </form>
+    <!--Get Pokemon Type-->
+    <h2>Get Pokemon Type</h2>
+    <form id="typeForm" action="/getPokemonType" method="get">
+      <select id='pokemonType'>
+        <option value='Water'>Water</option>
+        <option value='Fire'>Fire</option>
+        <option value='Grass'>Grass</option>
+        <option value='Normal'>Normal</option>
+        <option value='Flying'>Flying</option>
+        <option value='Rock'>Rock</option>
+        <option value='Ground'>Ground</option>
+        <option value='Bug'>Bug</option>
+        <option value='Fighting'>Fighting</option>
+        <option value='Electric'>Electric</option>
+        <option value='Ice'>Ice</option>
+        <option value='Poison'>Poison</option>
+        <option value='Psychic'>Psychic</option>
+        <option value='Ghost'>Ghost</option>
+        <option value='Dragon'>Dragon</option>
+      </select>
+      <select id="methodSelect">
+        <option value="get">GET</option>
+        <option value="head">HEAD</option>
+      </select>
+      <input type="submit" value="Get Pokemon Type" />
+    </form>
+    <!--Get Pokemon Evolutions-->
+    <h2>Get Pokemon Evolutions</h2>
+    <form id="evolutionForm" action="/getPokemonEvolution" method="get">
+      <label for="name">Name: </label>
+      <input id="nameField" type="text" name="name" />
+      <select id="methodSelect">
+        <option value="get">GET</option>
+        <option value="head">HEAD</option>
+      </select>
+      <input type="submit" value="Get Pokemon Evolutions" />
+    </form>
+    <!--Get All Pokemon-->
+    <h2>Get All Pokemon</h2>
+    <form id="allPokemonForm" action="/getAllPokemon" method="get">
+      <select id="methodSelect">
+        <option value="get">GET</option>
+        <option value="head">HEAD</option>
+      </select>
+      <input type="submit" value="Get All Pokemon" />
+    </form>
+    <!--Add Pokemon-->
+    <h2>Add Pokemon</h2>
+    <form id="addPokemonForm" action="/addPokemon" method="post">
+      <label for="name">Name: </label>
+      <input id="nameField" type="text" name="name" />
+      <input type="submit" value="Add Pokemon" />
+    </form>
+    <!--Rate Pokemon-->
+    <h2>Rate Pokemon</h2>
+    <form id="ratePokemonForm" action="/ratePokemon" method="post">
+      <label for="name">Name: </label>
+      <input id="nameField" type="text" name="name" />
+      <label for="rate">Rating: </label>
+      <input id="rateField" type="number" name="rate" min="1" max="10" step="1" />
+      <input type="submit" value="Rate Pokemon" />
+    </form>
+  </section>
+  <section id="content">
+  </section>
+</body>
+
+</html>

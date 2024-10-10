@@ -44,6 +44,8 @@ const handlePost = (request, response, parsedUrl) => {
 const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/') { // index html
     htmlHandler.getIndex(request, response);
+  } else if (parsedUrl.pathname === '/docs') { // docs page
+    htmlHandler.getDocs(request, response);
   } else if (parsedUrl.pathname === '/style.css') { // style css
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/getPokemon') { // get pokemon
@@ -62,6 +64,8 @@ const handleGet = (request, response, parsedUrl) => {
 const onRequest = (request, response) => {
   const protocol = request.connection.encrypted ? 'https' : 'http';
   const parsedUrl = new URL(request.url, `${protocol}://${request.headers.host}`);
+
+  request.query = Object.fromEntries(parsedUrl.searchParams);
 
   // check request method
   if (request.method === 'POST') {

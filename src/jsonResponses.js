@@ -1,5 +1,4 @@
 const fs = require('fs');
-const query = require('querystring');
 
 const pokedex = fs.readFileSync(`${__dirname}/../data/pokedex.json`);
 
@@ -92,36 +91,49 @@ const ratePokemon = (request, response) => {
   return respondJSON(request, response, responseCode, {});
 };
 
-// return pokemon based on name
+// return pokemon based on name or id
 const getPokemon = (request, response) => {
-  const pokemons = [];
-
   const pokedexJson = JSON.parse(pokedex);
+  const pokemons = [];
+  const pokemonName = request.query.name;
+  const responseJSON = {
+    message: 'Name is required',
+  };
 
-  const parameters = query.parse(request.url);
+  // error if pokemon name is not given
+  if (!pokemonName) {
+    responseJSON.id = 'addUserMissingParams';
+    return respondJSON(request, response, 400, responseJSON);
+  }
 
   // find pokemon that matches name
   pokedexJson.forEach((pokemon) => {
-    if (pokemon.name === parameters['/getPokemon?name']) {
+    if (pokemon.name === pokemonName) {
       pokemons.push(pokemon);
     }
   });
 
-  const responseJSON = {
-    pokemons,
-  };
+  // handle response if pokemon isn't found
+  if (pokemons.length === 0) {
+    responseJSON.message = 'Pokemon Not Found';
+    responseJSON.id = 'notFound';
+    return respondJSON(request, response, 404, responseJSON);
+  }
 
-  respondJSON(request, response, 200, responseJSON);
+  // pokemon successfully found
+  responseJSON.message = 'Pokemon Found Successfully';
+  responseJSON.pokemons = pokemons;
+
+  return respondJSON(request, response, 200, responseJSON);
 };
 
 const getPokemonType = (request, response) => {
-  const pokemons = [];
   const pokedexJson = JSON.parse(pokedex);
-
-  const parameters = query.parse(request.url);
+  const pokemons = [];
+  const pokemonType = request.query.type;
 
   pokedexJson.forEach((pokemon) => {
-    if (pokemon.type.includes(parameters['/getPokemonType?type'])) {
+    if (pokemon.type.includes(pokemonType)) {
       pokemons.push(pokemon);
     }
   });
@@ -137,10 +149,10 @@ const getPokemonEvolution = (request, response) => {
   const pokemons = [];
   const pokedexJson = JSON.parse(pokedex);
 
-  const parameters = query.parse(request.url);
+  const pokemonName = request.query.name;
 
   pokedexJson.forEach((pokemon) => {
-    if (pokemon.name === (parameters['/getPokemonEvolution?name'])) {
+    if (pokemon.name === pokemonName) {
       pokemons.push(pokemon.next_evolution);
     }
   });
