@@ -43,10 +43,15 @@
       const url = nameForm.getAttribute('action');
       const method = nameForm.getAttribute('method');
 
-      // get name and age from form
+      // get name and rating from form
       const name = nameForm.querySelector('#nameField');
+      const rate = nameForm.querySelector('#rateField');
 
-      const formData = `name=${name.value}`;
+      let formData = `name=${name.value}`;
+
+      if(rate){
+        formData += `&rate=${rate.value}`;
+      }
 
       // await fetch response using url, method, and formData
       let response = await fetch(url, {

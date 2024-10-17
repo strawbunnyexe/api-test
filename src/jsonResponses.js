@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const pokedex = fs.readFileSync(`${__dirname}/../data/pokedex.json`);
+const pokedexJson = JSON.parse(pokedex);
 
 const respondJSON = (request, response, status, object) => {
   const content = JSON.stringify(object);
@@ -17,6 +18,16 @@ const respondJSON = (request, response, status, object) => {
   response.end();
 };
 
+// helper function to go through json data and see if pokemon currently exist
+const pokemonExist = (pokemonName) => {
+  for (let i = 0; i < pokedexJson.length; i++) {
+    if (pokedexJson[i].name === pokemonName) {
+      return true;
+    }
+  }
+  return false;
+};
+
 // add a user from a POST body
 const addPokemon = (request, response) => {
   // default json message
@@ -25,10 +36,10 @@ const addPokemon = (request, response) => {
   };
 
   // get name from request body
-  const name = request.body;
+  const pokemonName = request.body.name;
 
-  // error message if name or age are missing
-  if (!name) {
+  // error message if name is missing
+  if (!pokemonName) {
     responseJSON.id = 'addUserMissingParams';
     return respondJSON(request, response, 400, responseJSON);
   }
@@ -37,17 +48,16 @@ const addPokemon = (request, response) => {
   let responseCode = 204;
 
   // create empty pokemon if user doesn't exist yet
-  if (!pokedex[name]) {
+  if (!pokemonExist(pokemonName)) {
     // change status code to 201 (created)
     responseCode = 201;
-    pokedex[name] = {
-      name,
-    };
+    pokedexJson.push({ name: pokemonName });
   }
 
   // set created message if response is created
   if (responseCode === 201) {
     responseJSON.message = 'Created Successfully';
+    responseJSON.pokemon = pokedexJson;
     return respondJSON(request, response, responseCode, responseJSON);
   }
 
@@ -61,39 +71,26 @@ const ratePokemon = (request, response) => {
     message: 'Name and rating are required.',
   };
   // get name from request body
-  const name = request.body;
+  const { name, rate } = request.body;
 
   // error message if name or age are missing
-  if (!name) {
+  if (!name || !rate) {
     responseJSON.id = 'addUserMissingParams';
     return respondJSON(request, response, 400, responseJSON);
   }
 
-  // default status code
-  let responseCode = 204;
-
-  // create empty pokemon if user doesn't exist yet
-  if (!pokedex[name]) {
-    // change status code to 201 (created)
-    responseCode = 201;
-    pokedex[name] = {
-      name,
-    };
+  // find pokemon that matches name
+  for (let i = 0; i < pokedexJson.length; i++) {
+    if (pokedexJson[i].name === name) {
+      pokedexJson[i].rating = rate;
+    }
   }
 
-  // set created message if response is created
-  if (responseCode === 201) {
-    responseJSON.message = 'Created Successfully';
-    return respondJSON(request, response, responseCode, responseJSON);
-  }
-
-  // send no response (empty message) if status code is 204
-  return respondJSON(request, response, responseCode, {});
+  return respondJSON(request, response, 204, responseJSON);
 };
 
 // return pokemon based on name or id
 const getPokemon = (request, response) => {
-  const pokedexJson = JSON.parse(pokedex);
   const pokemons = [];
   const pokemonName = request.query.name;
   const responseJSON = {
@@ -128,7 +125,6 @@ const getPokemon = (request, response) => {
 };
 
 const getPokemonType = (request, response) => {
-  const pokedexJson = JSON.parse(pokedex);
   const pokemons = [];
   const pokemonType = request.query.type;
 
@@ -147,7 +143,6 @@ const getPokemonType = (request, response) => {
 
 const getPokemonEvolution = (request, response) => {
   const pokemons = [];
-  const pokedexJson = JSON.parse(pokedex);
 
   const pokemonName = request.query.name;
 
@@ -166,9 +161,8 @@ const getPokemonEvolution = (request, response) => {
 
 // get all pokemon in JSON file
 const getAllPokemon = (request, response) => {
-  const pokemons = JSON.parse(pokedex);
   const responseJSON = {
-    pokemons,
+    pokedexJson,
   };
 
   respondJSON(request, response, 200, responseJSON);
