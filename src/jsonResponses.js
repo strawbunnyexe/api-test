@@ -36,10 +36,10 @@ const addPokemon = (request, response) => {
   };
 
   // get name from request body
-  const pokemonName = request.body.name;
+  const { name, type } = request.body;
 
   // error message if name is missing
-  if (!pokemonName) {
+  if (!name || !type) {
     responseJSON.id = 'addUserMissingParams';
     return respondJSON(request, response, 400, responseJSON);
   }
@@ -48,10 +48,10 @@ const addPokemon = (request, response) => {
   let responseCode = 204;
 
   // create empty pokemon if user doesn't exist yet
-  if (!pokemonExist(pokemonName)) {
+  if (!pokemonExist(name)) {
     // change status code to 201 (created)
     responseCode = 201;
-    pokedexJson.push({ name: pokemonName });
+    pokedexJson.push({ name, type: [type] });
   }
 
   // set created message if response is created
@@ -79,14 +79,15 @@ const ratePokemon = (request, response) => {
     return respondJSON(request, response, 400, responseJSON);
   }
 
-  // find pokemon that matches name
+  // find pokemon that matches name and assign rating
   for (let i = 0; i < pokedexJson.length; i++) {
     if (pokedexJson[i].name === name) {
       pokedexJson[i].rating = rate;
+      return respondJSON(request, response, 204, responseJSON);
     }
   }
 
-  return respondJSON(request, response, 204, responseJSON);
+  return respondJSON(request, response, 404, { id: 'notFound', message: 'Pokemon not found' });
 };
 
 // return pokemon based on name or id
@@ -128,6 +129,7 @@ const getPokemonType = (request, response) => {
   const pokemons = [];
   const pokemonType = request.query.type;
 
+  // search for matching pokemons with given type
   pokedexJson.forEach((pokemon) => {
     if (pokemon.type.includes(pokemonType)) {
       pokemons.push(pokemon);
@@ -145,18 +147,27 @@ const getPokemonEvolution = (request, response) => {
   const pokemons = [];
 
   const pokemonName = request.query.name;
+  const responseJSON = {
+    message: 'Name is required',
+  };
 
+  // error if pokemon name is not given
+  if (!pokemonName) {
+    responseJSON.id = 'addUserMissingParams';
+    return respondJSON(request, response, 400, responseJSON);
+  }
+
+  // find matching pokemon and get evolutions
   pokedexJson.forEach((pokemon) => {
     if (pokemon.name === pokemonName) {
       pokemons.push(pokemon.next_evolution);
     }
   });
 
-  const responseJSON = {
-    pokemons,
-  };
+  responseJSON.message = 'Found successfully';
+  responseJSON.pokemons = pokemons;
 
-  respondJSON(request, response, 200, responseJSON);
+  return respondJSON(request, response, 200, responseJSON);
 };
 
 // get all pokemon in JSON file
