@@ -125,6 +125,7 @@ const getPokemon = (request, response) => {
   return respondJSON(request, response, 200, responseJSON);
 };
 
+// get all pokemon of a specific type
 const getPokemonType = (request, response) => {
   const pokemons = [];
   const pokemonType = request.query.type;
@@ -137,6 +138,7 @@ const getPokemonType = (request, response) => {
   });
 
   const responseJSON = {
+    message: `All pokemon with ${pokemonType} Type`,
     pokemons,
   };
 
@@ -157,12 +159,21 @@ const getPokemonEvolution = (request, response) => {
     return respondJSON(request, response, 400, responseJSON);
   }
 
-  // find matching pokemon and get evolutions
+  // find matching pokemon and get evolutions if they exist
   pokedexJson.forEach((pokemon) => {
     if (pokemon.name === pokemonName) {
-      pokemons.push(pokemon.next_evolution);
+      if (pokemon.next_evolution) {
+        pokemons.push(pokemon.next_evolution[0]);
+      }
     }
   });
+
+  // handle response if pokemon isn't found
+  if (pokemons.length === 0) {
+    responseJSON.message = 'Evolution Not Found';
+    responseJSON.id = 'notFound';
+    return respondJSON(request, response, 404, responseJSON);
+  }
 
   responseJSON.message = 'Found successfully';
   responseJSON.pokemons = pokemons;
@@ -173,7 +184,8 @@ const getPokemonEvolution = (request, response) => {
 // get all pokemon in JSON file
 const getAllPokemon = (request, response) => {
   const responseJSON = {
-    pokedexJson,
+    message: 'All Pokemon',
+    pokemons: pokedexJson,
   };
 
   respondJSON(request, response, 200, responseJSON);

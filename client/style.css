@@ -3,19 +3,23 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 #top {
-  text-align: center;
-  margin: 0 auto;
+  margin: 0 10%;
 }
 
 #top h1 {
-  font-size: 2em;
+  font-size: 1.5em;
+  text-align: center;
 }
 
+
 #content {
+  height: 200px;
+  overflow: scroll;
   margin-top: 100px;
-  font-size: 2em;
+  font-size: 1em;
   text-align: center;
 }

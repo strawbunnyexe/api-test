@@ -11,24 +11,83 @@
 <body>
   <section id="top">
     <h1>Pokemon API Test</h1>
-    <a href="/">Test</a>
+    <a href="/">Homepage</a>
     <!--Get Pokemon-->
-    <h2>Get Pokemon</h2>
+    <h2>Get Pokemon (GET, HEAD)</h2>
+    <h3>Query Params</h3>
+    <ul>
+      <li>Name - A pokemon's name to search by</li>
+    </ul>
+    <h3>Returns</h3>
+    <ul>
+      <li>A JSON pokemon object {name: string, type: [string], rating: number}</li>
+    </ul>
 
     <!--Get Pokemon Type-->
-    <h2>Get Pokemon Type</h2>
+    <h2>Get Pokemon Type (GET, HEAD)</h2>
+    <h3>Query Params</h3>
+    <ul>
+      <li>Type - A pokemon type to filter by</li>
+    </ul>
+    <h3>Returns</h3>
+    <ul>
+      <li>A JSON array of pokemon that match type {name: string}</li>
+    </ul>
 
     <!--Get Pokemon Evolutions-->
-    <h2>Get Pokemon Evolutions</h2>
+    <h2>Get Pokemon Evolutions (GET, HEAD)</h2>
+    <h3>Query Params</h3>
+    <ul>
+      <li>Name - A pokemon's name to search by</li>
+    </ul>
+    <h3>Returns</h3>
+    <ul>
+      <li>A JSON pokemon object of the given pokemon's next evolution if it exists {name: string}</li>
+    </ul>
 
     <!--Get All Pokemon-->
-    <h2>Get All Pokemon</h2>
+    <h2>Get All Pokemon (GET, HEAD)</h2>
+    <h3>Query Params</h3>
+    <ul>
+      <li>No Supported Params</li>
+    </ul>
+    <h3>Returns</h3>
+    <ul>
+      <li>A JSON array of pokemon objects</li>
+    </ul>
 
     <!--Add Pokemon-->
-    <h2>Add Pokemon</h2>
+    <h2>Add Pokemon (POST)</h2>
+    <h3>Supported Body Formats</h3>
+    <ul>
+      <li>application/json, application/x-www-form-urlencoded</li>
+    </ul>
+    <h3>Body Params</h3>
+    <ul>
+      <li>Name (string) -  A pokemon's name to add</li>
+      <li>Type (string) - A pokemon type to add with new pokemon</li>
+    </ul>
+    <h3>Returns</h3>
+    <ul>
+      <li>A JSON pokemon object representing new pokemon {name: string, type: [string]}</li>
+    </ul>
 
     <!--Rate Pokemon-->
-    <h2>Rate Pokemon</h2>
+    <h2>Rate Pokemon (POST)</h2>
+    <h3>Supported Body Formats</h3>
+    <ul>
+      <li>application/json, application/x-www-form-urlencoded</li>
+    </ul>
+    <h3>Body Params</h3>
+    <ul>
+      <li>Name (string)- A pokemon's name to search by</li>
+      <li>Rating (number) - A rating to give to pokemon (1-5)</li>
+    </ul>
+    <h3>Returns</h3>
+    <ul>
+      <li>A JSON pokemon object representing updated pokemon {name: string, type: [string], rating: number}</li>
+    </ul>
+
 
   </section>
   <section id="content">
